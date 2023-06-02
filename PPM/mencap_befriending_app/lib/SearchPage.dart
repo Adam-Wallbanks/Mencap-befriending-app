@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class IndexPage extends StatefulWidget {
   @override
@@ -20,16 +17,16 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Widget getBody() {
-    List items = ["1", "2","3","4","3","3","3","2","3","a","b","c","d","e","f","g","h"];
+    List<String> items = ["1", "2","3","4","3","3","3","2","3","a","b","c","d","e","f","g","h"];
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return getCard();
+        return getCard(items[index]);
       },
     );
   }
 
-  Widget getCard() {
+  Widget getCard(String item) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -43,10 +40,14 @@ class _IndexPageState extends State<IndexPage> {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(30),
                 ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    item
+                  ),
+                ),
               ),
-              SizedBox(
-                width: 20,
-              ),
+              const Spacer(),
               Text(
                 "Test Text",
                 style: TextStyle(fontSize: 17),

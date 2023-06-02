@@ -22,6 +22,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
+    super.initState();
     ClientsToRows(supabase.GetClients()).then((value) {
       setState(() {
         dataRows = value;
