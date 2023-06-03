@@ -47,10 +47,6 @@ class SupabaseManager {
     return client.from(table).update(update).match(match);
   }
 
-  UpdateUserWithClients(String userid, String clientid) {
-
-  }
-
   UpdateUserDetails(String userid, String field, String oldvalue, String newvalue) {
     int usernum = int.parse(userid);
     print(usernum.toString());
