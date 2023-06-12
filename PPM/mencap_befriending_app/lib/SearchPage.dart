@@ -1,4 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'data.dart';
+import 'supabasemanager.dart';
+import 'package:supabase/supabase.dart';
+import 'dart:async';
+
 
 class IndexPage extends StatefulWidget {
   @override
@@ -10,7 +16,7 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Clients"),
+        title: const Text("Clients"),
       ),
       body: getBody(),
     );
@@ -48,7 +54,7 @@ class _IndexPageState extends State<IndexPage> {
                 ),
               ),
               const Spacer(),
-              Text(
+              const Text(
                 "Test Text",
                 style: TextStyle(fontSize: 17),
               ),
@@ -59,3 +65,39 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 }
+
+Future<List<Client>> QueryClients(PostgrestFilterBuilder query)
+{
+  final completer =  Completer<List<Client>>();
+  final List<Client> clients = [];
+
+  query.then((values) {
+    clients.clear();
+    for(dynamic value in values) {
+      Client client = Client.complete(value['id'].toString(), value['days'], value['town'], value['postcode'], value['hours'], value['age'], value['notes']);
+      clients.add(client);
+    }
+    completer.complete(clients);
+  }).catchError((error) {
+    completer.completeError(error);
+  });
+
+  return completer.future;
+}
+
+List<Card> ClientstoCards(List<Client> clients)
+{
+  List<Card> cards = [];
+
+  for (Client client in clients)
+    {
+      Card card = Card(
+
+      );
+    }
+
+  return cards;
+}
+
+
+
