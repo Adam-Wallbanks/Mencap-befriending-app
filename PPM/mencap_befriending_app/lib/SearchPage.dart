@@ -5,7 +5,6 @@ import 'supabasemanager.dart';
 import 'package:supabase/supabase.dart';
 import 'dart:async';
 
-
 class IndexPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
@@ -17,13 +16,21 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Clients"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
       ),
       body: getBody(),
     );
   }
 
   Widget getBody() {
-    List<String> items = ["1", "2","3","4","3","3","3","2","3","a","b","c","d","e","f","g","h"];
+    List<String> items = ["1", "2", "3", "4", "3", "3", "3", "2", "3", "a", "b", "c", "d", "e", "f", "g", "h"];
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -34,31 +41,66 @@ class _IndexPageState extends State<IndexPage> {
 
   Widget getCard(String item) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListTile(
-          title: Row(
-            children: <Widget>[
-              Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    item
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.green],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: ListTile(
+            title: Row(
+              children: <Widget>[
+                Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(item),
                   ),
                 ),
-              ),
-              const Spacer(),
-              const Text(
-                "Test Text",
-                style: TextStyle(fontSize: 17),
-              ),
-            ],
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Postcode: XXXXX",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      "Hours Available: X",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    DayCircle(day: "M"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "T"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "W"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "T"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "F"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "S"),
+                    const SizedBox(width: 5),
+                    DayCircle(day: "S"),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -66,38 +108,29 @@ class _IndexPageState extends State<IndexPage> {
   }
 }
 
-Future<List<Client>> QueryClients(PostgrestFilterBuilder query)
-{
-  final completer =  Completer<List<Client>>();
-  final List<Client> clients = [];
+class DayCircle extends StatelessWidget {
+  final String day;
 
-  query.then((values) {
-    clients.clear();
-    for(dynamic value in values) {
-      Client client = Client.complete(value['id'].toString(), value['days'], value['town'], value['postcode'], value['hours'], value['age'], value['notes']);
-      clients.add(client);
-    }
-    completer.complete(clients);
-  }).catchError((error) {
-    completer.completeError(error);
-  });
+  const DayCircle({required this.day});
 
-  return completer.future;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30,
+      height: 30,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
+      child: Center(
+        child: Text(
+          day,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-List<Card> ClientstoCards(List<Client> clients)
-{
-  List<Card> cards = [];
-
-  for (Client client in clients)
-    {
-      Card card = Card(
-
-      );
-    }
-
-  return cards;
-}
-
-
-
