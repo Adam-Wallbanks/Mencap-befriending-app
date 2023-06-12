@@ -59,7 +59,7 @@ class _IndexPageState extends State<IndexPage> {
                   height: 60,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Align(
@@ -86,7 +86,7 @@ class _IndexPageState extends State<IndexPage> {
                   children: [
                     DayCircle(day: "M"),
                     const SizedBox(width: 5),
-                    DayCircle(day: "T"),
+                    DayCircle(day: "T", color: Colors.black),
                     const SizedBox(width: 5),
                     DayCircle(day: "W"),
                     const SizedBox(width: 5),
@@ -110,8 +110,8 @@ class _IndexPageState extends State<IndexPage> {
 
 class DayCircle extends StatelessWidget {
   final String day;
-
-  const DayCircle({required this.day});
+  final Color color;
+  const DayCircle({required this.day, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +120,7 @@ class DayCircle extends StatelessWidget {
       height: 30,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
+        color: color,
       ),
       child: Center(
         child: Text(
@@ -128,6 +128,7 @@ class DayCircle extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
+            color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
           ),
         ),
       ),
