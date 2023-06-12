@@ -13,6 +13,14 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        flexibleSpace: Align(
+          alignment: Alignment.center,
+          child: Image.asset(
+            'assets/nottingham_mencap_logo.png', // Update the image path based on your assets folder structure
+            width: 100,
+            height: 100,
+          ),
+        ),
       ),
       body: Container(
         decoration: pageDecoration,
@@ -40,45 +48,6 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   // Perform login functionality here
-                  String username = userController.text;
-                  String password = passwordController.text;
-                  Encrypter encrypter = new Encrypter();
-
-                  username = encrypter.encryptBase64(username);
-                  password = encrypter.hashPassword(password);
-
-                  bool valid = await supabase.ValidateUser(username, password);
-
-                  String dialogMessage = "";
-
-                  if (valid) //If there is a valid account match
-                  {
-                    dialogMessage = "Login Valid";
-                    valid = true;
-                  } else {
-                    dialogMessage = "Login Invalid";
-                  }
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext builder) => AlertDialog(
-                            title: const Text("Log In"),
-                            content: Text(dialogMessage),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK', style:TextStyle(color: Colors.black)),
-                              ),
-                            ],
-                          )).then((value) async {
-                    if (valid) {
-                      List<String> userdetails = await supabase.SelectUser(username, password);
-                      String userid = userdetails[0];
-                      print(userid);
-                      Navigator.pushNamed(context, "/SearchPage", arguments: {
-                        'userid' : userid,
-                      });
-                    }
-                  });
                 },
                 child: const Text('Log In'),
               ),
@@ -88,7 +57,7 @@ class LoginPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Dont Have an Account? "),
+                    const Text("Don't Have an Account? "),
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/signup');
@@ -216,51 +185,12 @@ class SignUpPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      String firstname = firstNameController.text,
-                      lastname = lastNameController.text,
-                      email = emailController.text,
-                      username = userNameController.text,
-                      password = passwordController.text;
-                      
-
-                      Encrypter encrypter = new Encrypter();
-
-                      username = encrypter.encryptBase64(username);
-                      password = encrypter.hashPassword(password);
-                      email = encrypter.encryptBase64(email);
-                      firstname = encrypter.encryptBase64(firstname);
-                      lastname = encrypter.encryptBase64(lastname);
-
-
-                      await showDialog(
-                          context: context,
-                          builder: (BuildContext builder) => AlertDialog(
-                                title: const Text("Sign Up"),
-                                content: const Text("Account Created"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text('OK', style: TextStyle(color: Colors.black)),
-                                  ),
-                                ],
-                              ));
-                      //Return to log in page
-                     Navigator.of(context).pop();
-
-                      //Input details into supabase
-                      await supabase.InsertUser(
-                        firstname,
-                        lastname,
-                        email,
-                        username,
-                        password
-                      );
+                      // Perform sign up functionality here
                     }
                   },
                   child: const Text('Sign Up'),
                 ),
-                const Spacer()
+                const Spacer(),
               ],
             ),
           ),
