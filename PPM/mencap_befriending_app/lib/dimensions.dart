@@ -1,0 +1,1 @@
+int MobileWidth = 700;

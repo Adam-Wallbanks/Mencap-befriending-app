@@ -136,6 +136,25 @@ class _IndexPageState extends State<IndexPage> {
   }
 }
 
+List<Card> GetClientBody(List<Client> clients)
+{
+  List<Card> cards = [];
+
+  return cards;
+}
+
+Card clientCard(Client client)
+{
+  return Card(
+
+    child: ExpansionTile(
+      title: Text(""),
+    ),
+
+  );
+}
+
+
 class DayCircle extends StatelessWidget {
   final String day;
   final Color color;
