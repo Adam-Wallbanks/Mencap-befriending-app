@@ -14,6 +14,14 @@ class MobileLoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        flexibleSpace: Align(
+          alignment: Alignment.center,
+          child: Image.asset(
+            'assets/nottingham_mencap_logo.png',
+            width: 100,
+            height: 100,
+          ),
+        ),
       ),
       body: Container(
         decoration: pageDecoration,
@@ -53,7 +61,7 @@ class MobileLoginPage extends StatelessWidget {
                   String dialogMessage = "";
 
                   if (valid) //If there is a valid account match
-                  {
+                      {
                     dialogMessage = "Login Valid";
                     valid = true;
                   } else {
@@ -62,16 +70,16 @@ class MobileLoginPage extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (BuildContext builder) => AlertDialog(
-                            title: const Text("Log In"),
-                            content: Text(dialogMessage),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK',
-                                    style: TextStyle(color: Colors.black)),
-                              ),
-                            ],
-                          )).then((value) async {
+
+                        title: const Text("Log In"),
+                        content: Text(dialogMessage),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK', style:TextStyle(color: Colors.black)),
+                          ),
+                        ],
+                      )).then((value) async {
                     if (valid) {
                       List<String> userdetails =
                           await supabase.SelectUser(username, password);
@@ -366,17 +374,16 @@ class SignUpPage extends StatelessWidget {
                       await showDialog(
                           context: context,
                           builder: (BuildContext builder) => AlertDialog(
-                                title: const Text("Sign Up"),
-                                content: const Text("Account Created"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text('OK',
-                                        style: TextStyle(color: Colors.black)),
-                                  ),
-                                ],
-                              ));
+                            title: const Text("Sign Up"),
+                            content: const Text("Account Created"),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'OK'),
+                                child: const Text('OK', style: TextStyle(color: Colors.black)),
+                              ),
+                            ],
+                          ));
                       //Return to log in page
                       Navigator.of(context).pop();
 

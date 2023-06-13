@@ -4,12 +4,12 @@ import 'LoginPages.dart';
 import 'SettingsPages.dart';
 
 void main() {
-  
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   void _toggleTheme() {
     setState(() {
       _currentThemeMode =
-          _currentThemeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+      _currentThemeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
@@ -30,15 +30,15 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: whiteSwatch,
-          appBarTheme: const AppBarTheme(
-          foregroundColor: Colors.black, 
+        appBarTheme: const AppBarTheme(
+          foregroundColor: Colors.black,
         ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: blackSwatch,
         appBarTheme: const AppBarTheme(
-          foregroundColor: Colors.white, 
+          foregroundColor: Colors.white,
         ),
       ),
       themeMode: _currentThemeMode,
@@ -58,12 +58,10 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-
-
-
-//Main Page
+// Main Page
 class MainPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,22 +88,25 @@ class MainPage extends StatelessWidget {
                 Column(
                   children: [
                     ElevatedButton(
-                       onPressed: () {
-                          Navigator.pushNamed(context, '/SearchPage');
-                        },
-                        child: const Text("Search")),
-                        const SizedBox(height: 16),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/SearchPage');
+                      },
+                      child: const Text("Search"),
+                    ),
+                    const SizedBox(height: 16),
                     ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/Settings');
-                        },
-                        child: const Text("Settings")),
-                        const SizedBox(height: 16),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/Settings');
+                      },
+                      child: const Text("Settings"),
+                    ),
+                    const SizedBox(height: 16),
                     ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Back")),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Back"),
+                    ),
                   ],
                 ),
                 const Spacer(),
@@ -134,17 +135,18 @@ MaterialColor blackSwatch = const MaterialColor(0xFF000000, {
 });
 
 MaterialColor whiteSwatch = const MaterialColor(
-    0xFFFFFFFF,
-    <int, Color>{
-      50: Color(0xFFFFFFFF),
-      100: Color(0xFFFFFFFF),
-      200: Color(0xFFFFFFFF),
-      300: Color(0xFFFFFFFF),
-      400: Color(0xFFFFFFFF),
-      500: Color(0xFFFFFFFF),
-      600: Color(0xFFFFFFFF),
-      700: Color(0xFFFFFFFF),
-      800: Color(0xFFFFFFFF),
-      900: Color(0xFFFFFFFF),
-    },
-  );
+  0xFFFFFFFF,
+  <int, Color>{
+    50: Color(0xFFFFFFFF),
+    100: Color(0xFFFFFFFF),
+    200: Color(0xFFFFFFFF),
+    300: Color(0xFFFFFFFF),
+    400: Color(0xFFFFFFFF),
+    500: Color(0xFFFFFFFF),
+    600: Color(0xFFFFFFFF),
+    700: Color(0xFFFFFFFF),
+    800: Color(0xFFFFFFFF),
+    900: Color(0xFFFFFFFF),
+  },
+);
+
