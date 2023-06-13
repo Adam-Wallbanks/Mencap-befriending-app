@@ -153,16 +153,35 @@ class _IndexPageState extends State<IndexPage> {
   }
 }
 
+List<Card> GetClientBody(List<Client> clients)
+{
+  List<Card> cards = [];
+
+  return cards;
+}
+
+Card clientCard(Client client)
+{
+  return Card(
+
+  );
+}
+
+
 class DayCircle extends StatelessWidget {
   final String day;
   final double circleSize;
   final double fontSize;
+  final Color color;
 
   const DayCircle({
     required this.day,
     required this.circleSize,
     required this.fontSize,
+    required this.color
   });
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +190,7 @@ class DayCircle extends StatelessWidget {
       height: circleSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
+        color: color,
       ),
       child: Center(
         child: Text(
@@ -179,6 +198,7 @@ class DayCircle extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
+            color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
           ),
         ),
       ),
