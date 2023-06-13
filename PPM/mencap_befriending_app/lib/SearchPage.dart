@@ -32,7 +32,9 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Widget getBody() {
-    List<String> items = ["1", "2", "3", "4", "3", "3", "3", "2", "3", "a", "b", "c", "d", "e", "f", "g", "h"];
+    List<String> items = [
+      "1"
+    ];
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -41,7 +43,7 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-  Widget getCard(String item, int index) {
+  Widget getCard(String id, int index) {
     bool isExpanded = expandedStates[index];
     return Card(
       child: GestureDetector(
@@ -75,7 +77,7 @@ class _IndexPageState extends State<IndexPage> {
                       ),
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text(item),
+                        child: Text(id),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -136,20 +138,15 @@ class _IndexPageState extends State<IndexPage> {
   }
 }
 
-List<Card> GetClientBody(List<Client> clients)
-{
+List<Card> GetClientBody(List<Client> clients) {
   List<Card> cards = [];
 
   return cards;
 }
 
-Card clientCard(Client client)
-{
-  return Card(
-
-  );
+Card clientCard(Client client) {
+  return Card();
 }
-
 
 class DayCircle extends StatelessWidget {
   final String day;
@@ -169,10 +166,11 @@ class DayCircle extends StatelessWidget {
         child: Text(
           day,
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
-          ),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: (color.computeLuminance() > 0.179)
+                  ? Colors.black
+                  : Colors.white),
         ),
       ),
     );
