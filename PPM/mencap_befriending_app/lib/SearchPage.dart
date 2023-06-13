@@ -36,13 +36,16 @@ class _IndexPageState extends State<IndexPage> {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return getCard(items[index], index);
+        return getCard(items[index], index, context);
       },
     );
   }
 
-  Widget getCard(String item, int index) {
+  Widget getCard(String item, int index, BuildContext context) {
     bool isExpanded = expandedStates[index];
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double circleSize = deviceWidth > 600 ? 30.0 : 20.0;
+    double fontSize = deviceWidth > 600 ? 16.0 : 14.0;
     return Card(
       child: GestureDetector(
         onTap: () {
@@ -67,11 +70,11 @@ class _IndexPageState extends State<IndexPage> {
                 Row(
                   children: <Widget>[
                     Container(
-                      height: 60,
-                      width: 60,
+                      height: circleSize,
+                      width: circleSize,
                       decoration: BoxDecoration(
                         color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(circleSize / 2),
                       ),
                       child: Align(
                         alignment: Alignment.center,
@@ -85,20 +88,20 @@ class _IndexPageState extends State<IndexPage> {
                         children: [
                           Text(
                             "Postcode: XXXXX",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: fontSize),
                           ),
                           Text(
                             "Hours Available: X",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: fontSize),
                           ),
                           if (isExpanded) ...[
                             Text(
                               "Age: XX",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: fontSize),
                             ),
                             Text(
                               "Additional Information",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: fontSize),
                             ),
                           ],
                         ],
@@ -106,26 +109,40 @@ class _IndexPageState extends State<IndexPage> {
                     ),
                     Row(
                       children: [
-                        DayCircle(day: "M"),
+                        DayCircle(day: "M", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "T"),
+                        DayCircle(day: "T", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "W"),
+                        DayCircle(day: "W", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "T"),
+                        DayCircle(day: "T", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "F"),
+                        DayCircle(day: "F", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "S"),
+                        DayCircle(day: "S", circleSize: circleSize, fontSize: fontSize),
                         const SizedBox(width: 5),
-                        DayCircle(day: "S"),
+                        DayCircle(day: "S", circleSize: circleSize, fontSize: fontSize),
                       ],
                     ),
                   ],
                 ),
                 if (isExpanded) ...[
                   SizedBox(height: 10),
-                  // Add additional expanded content here
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.thumb_up, color: Colors.white),
+                        onPressed: () {
+                          // Perform thumbs up action here
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -138,14 +155,20 @@ class _IndexPageState extends State<IndexPage> {
 
 class DayCircle extends StatelessWidget {
   final String day;
+  final double circleSize;
+  final double fontSize;
 
-  const DayCircle({required this.day});
+  const DayCircle({
+    required this.day,
+    required this.circleSize,
+    required this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 30,
-      height: 30,
+      width: circleSize,
+      height: circleSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
@@ -154,7 +177,7 @@ class DayCircle extends StatelessWidget {
         child: Text(
           day,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: fontSize,
             fontWeight: FontWeight.bold,
           ),
         ),
