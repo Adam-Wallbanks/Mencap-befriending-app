@@ -11,6 +11,8 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
+  List<bool> expandedStates = List.filled(17, false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,71 +36,97 @@ class _IndexPageState extends State<IndexPage> {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return getCard(items[index]);
+        return getCard(items[index], index);
       },
     );
   }
 
-  Widget getCard(String item) {
+  Widget getCard(String item, int index) {
+    bool isExpanded = expandedStates[index];
     return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.green],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            expandedStates[index] = !isExpanded;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.green],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListTile(
-            title: Row(
-              children: <Widget>[
-                Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(item),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Postcode: XXXXX",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Hours Available: X",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-                const Spacer(),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Row(
-                  children: [
-                    DayCircle(day: "M"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "T"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "W"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "T"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "F"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "S"),
-                    const SizedBox(width: 5),
-                    DayCircle(day: "S"),
+                  children: <Widget>[
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(item),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Postcode: XXXXX",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            "Hours Available: X",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          if (isExpanded) ...[
+                            Text(
+                              "Age: XX",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "Additional Information",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        DayCircle(day: "M"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "T"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "W"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "T"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "F"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "S"),
+                        const SizedBox(width: 5),
+                        DayCircle(day: "S"),
+                      ],
+                    ),
                   ],
                 ),
+                if (isExpanded) ...[
+                  SizedBox(height: 10),
+                  // Add additional expanded content here
+                ],
               ],
             ),
           ),
