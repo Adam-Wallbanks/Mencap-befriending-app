@@ -13,6 +13,14 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        flexibleSpace: Align(
+          alignment: Alignment.center,
+          child: Image.asset(
+            'assets/nottingham_mencap_logo.png',
+            width: 100,
+            height: 100,
+          ),
+        ),
       ),
       body: Container(
         decoration: pageDecoration,
@@ -52,7 +60,7 @@ class LoginPage extends StatelessWidget {
                   String dialogMessage = "";
 
                   if (valid) //If there is a valid account match
-                  {
+                      {
                     dialogMessage = "Login Valid";
                     valid = true;
                   } else {
@@ -61,15 +69,15 @@ class LoginPage extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (BuildContext builder) => AlertDialog(
-                            title: const Text("Log In"),
-                            content: Text(dialogMessage),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK', style:TextStyle(color: Colors.black)),
-                              ),
-                            ],
-                          )).then((value) async {
+                        title: const Text("Log In"),
+                        content: Text(dialogMessage),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                            child: const Text('OK', style:TextStyle(color: Colors.black)),
+                          ),
+                        ],
+                      )).then((value) async {
                     if (valid) {
                       List<String> userdetails = await supabase.SelectUser(username, password);
                       String userid = userdetails[0];
@@ -217,11 +225,11 @@ class SignUpPage extends StatelessWidget {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       String firstname = firstNameController.text,
-                      lastname = lastNameController.text,
-                      email = emailController.text,
-                      username = userNameController.text,
-                      password = passwordController.text;
-                      
+                          lastname = lastNameController.text,
+                          email = emailController.text,
+                          username = userNameController.text,
+                          password = passwordController.text;
+
 
                       Encrypter encrypter = new Encrypter();
 
@@ -235,26 +243,26 @@ class SignUpPage extends StatelessWidget {
                       await showDialog(
                           context: context,
                           builder: (BuildContext builder) => AlertDialog(
-                                title: const Text("Sign Up"),
-                                content: const Text("Account Created"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text('OK', style: TextStyle(color: Colors.black)),
-                                  ),
-                                ],
-                              ));
+                            title: const Text("Sign Up"),
+                            content: const Text("Account Created"),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'OK'),
+                                child: const Text('OK', style: TextStyle(color: Colors.black)),
+                              ),
+                            ],
+                          ));
                       //Return to log in page
-                     Navigator.of(context).pop();
+                      Navigator.of(context).pop();
 
                       //Input details into supabase
                       await supabase.InsertUser(
-                        firstname,
-                        lastname,
-                        email,
-                        username,
-                        password
+                          firstname,
+                          lastname,
+                          email,
+                          username,
+                          password
                       );
                     }
                   },
