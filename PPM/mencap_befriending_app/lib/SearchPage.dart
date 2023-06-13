@@ -147,10 +147,6 @@ Card clientCard(Client client)
 {
   return Card(
 
-    child: ExpansionTile(
-      title: Text(""),
-    ),
-
   );
 }
 

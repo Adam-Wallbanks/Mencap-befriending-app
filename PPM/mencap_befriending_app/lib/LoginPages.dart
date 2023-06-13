@@ -18,8 +18,8 @@ class MobileLoginPage extends StatelessWidget {
           alignment: Alignment.center,
           child: Image.asset(
             'assets/nottingham_mencap_logo.png',
-            width: 100,
-            height: 100,
+            width: 150,
+            height: 150,
           ),
         ),
       ),
@@ -127,6 +127,14 @@ class DesktopLoginPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Login'),
+          flexibleSpace: Align(
+            alignment: Alignment.center,
+            child: Image.asset(
+              'assets/nottingham_mencap_logo.png',
+              width: 150,
+              height: 150,
+            ),
+          ),
         ),
         body: Container(
             decoration: pageDecoration,
