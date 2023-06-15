@@ -77,111 +77,6 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-
-  Widget getBody() {
-    List<String> items = ["1"];
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return getCard(items[index], index);
-      },
-    );
-  }
-
-  Widget getCard(String id, int index) {
-    bool isExpanded = expandedStates[index];
-    return Card(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            expandedStates[index] = !isExpanded;
-          });
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.green],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(id),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Postcode: XXXXX",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            "Hours Available: X",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          if (isExpanded) ...[
-                            Text(
-                              "Age: XX",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            Text(
-                              "Additional Information",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        DayCircle(day: "M"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "T"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "W"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "T"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "F"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "S"),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "S"),
-                      ],
-                    ),
-                  ],
-                ),
-                if (isExpanded) ...[
-                  SizedBox(height: 10),
-                  // Add additional expanded content here
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget GetClientBody(List<Client> clients) {
     return ListView.builder(
       itemCount: clients.length,
@@ -270,22 +165,6 @@ class _IndexPageState extends State<IndexPage> {
       ),
     );
   }
-  
-}
-
-List<DayCircle> getDays(String daystring) {
-  List<DayCircle> days = [];
-  const String comparedays = "MTWTFSS";
-
-  for (int i = 0; i < 7; i++) {
-    Color dayColor = Colors.black;
-    if (daystring[i] == comparedays[i]) {
-      dayColor = Colors.white;
-    }
-    DayCircle dayCircle = DayCircle(day: daystring[i], color: dayColor);
-    days.add(dayCircle);
-  }
-  return days;
 }
 
 class DayCircle extends StatelessWidget {
@@ -315,4 +194,19 @@ class DayCircle extends StatelessWidget {
       ),
     );
   }
+}
+
+List<DayCircle> getDays(String daystring) {
+  List<DayCircle> days = [];
+  const String comparedays = "MTWTFSS";
+
+  for (int i = 0; i < 7; i++) {
+    Color dayColor = Colors.black;
+    if (daystring[i] == comparedays[i]) {
+      dayColor = Colors.white;
+    }
+    DayCircle dayCircle = DayCircle(day: daystring[i], color: dayColor);
+    days.add(dayCircle);
+  }
+  return days;
 }
