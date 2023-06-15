@@ -118,7 +118,7 @@ class SupabaseManager {
     return returnBool;
   }
 
-  GetClients()
+  GetClientsQuery()
   {
     try{
       PostgrestFilterBuilder query = client.from("Clients").select('*');

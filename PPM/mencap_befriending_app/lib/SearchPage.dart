@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'data.dart';
 import 'supabasemanager.dart';
@@ -11,7 +10,42 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
+  SupabaseManager supabase = SupabaseManager();
   List<bool> expandedStates = List.filled(17, false);
+
+  late Future<List<Client>> clientsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    clientsFuture = getClients(supabase.GetClientsQuery());
+  }
+
+  Future<List<Client>> getClients(PostgrestFilterBuilder query) {
+    final completer = Completer<List<Client>>();
+    final List<Client> clients = [];
+
+    query.then((values) {
+      clients.clear();
+      for (dynamic value in values) {
+        Client addClient = Client.complete(
+            value['id'].toString(),
+            value['days'],
+            value['town'],
+            value['postcode'],
+            value['hours'],
+            value['age'],
+            value['notes']);
+        clients.add(addClient);
+      }
+      print(clients.toString());
+      completer.complete(clients);
+    }).catchError((error) {
+      completer.completeError(error);
+    });
+
+    return completer.future;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +61,32 @@ class _IndexPageState extends State<IndexPage> {
           ),
         ],
       ),
-      body: getBody(),
+      body: FutureBuilder<List<Client>>(
+        future: clientsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final clients = snapshot.data!;
+            return GetClientBody(clients);
+          }
+        },
+      ),
     );
   }
 
-  Widget getBody() {
-    List<String> items = ["1", "2", "3", "4", "3", "3", "3", "2", "3", "a", "b", "c", "d", "e", "f", "g", "h"];
+  Widget GetClientBody(List<Client> clients) {
     return ListView.builder(
-      itemCount: items.length,
+      itemCount: clients.length,
       itemBuilder: (context, index) {
-        return getCard(items[index], index, context);
+        return clientCard(clients[index], index);
       },
     );
   }
-
-  Widget getCard(String item, int index, BuildContext context) {
+  
+  Card clientCard(Client client, int index) {
     bool isExpanded = expandedStates[index];
     double deviceWidth = MediaQuery.of(context).size.width;
     double circleSize = deviceWidth > 600 ? 30.0 : 20.0;
@@ -73,12 +118,13 @@ class _IndexPageState extends State<IndexPage> {
                       height: circleSize,
                       width: circleSize,
                       decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(circleSize / 2),
+
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text(item),
+                        child: Text(client.id),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -87,17 +133,18 @@ class _IndexPageState extends State<IndexPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Postcode: XXXXX",
-                            style: TextStyle(fontSize: fontSize),
+                            "Postcode: " + client.postcode,
+                            style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            "Hours Available: X",
-                            style: TextStyle(fontSize: fontSize),
+                            "Hours Available: " + client.hours,
+                            style: TextStyle(fontSize: 16),
                           ),
                           if (isExpanded) ...[
                             Text(
-                              "Age: XX",
-                              style: TextStyle(fontSize: fontSize),
+                              "Age: " + client.age,
+                              style: TextStyle(fontSize: 16),
+
                             ),
                             Text(
                               "Additional Information",
@@ -108,21 +155,7 @@ class _IndexPageState extends State<IndexPage> {
                       ),
                     ),
                     Row(
-                      children: [
-                        DayCircle(day: "M", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "T", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "W", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "T", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "F", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "S", circleSize: circleSize, fontSize: fontSize),
-                        const SizedBox(width: 5),
-                        DayCircle(day: "S", circleSize: circleSize, fontSize: fontSize),
-                      ],
+                      children: getDays(client.days),
                     ),
                   ],
                 ),
@@ -153,21 +186,6 @@ class _IndexPageState extends State<IndexPage> {
   }
 }
 
-List<Card> GetClientBody(List<Client> clients)
-{
-  List<Card> cards = [];
-
-  return cards;
-}
-
-Card clientCard(Client client)
-{
-  return Card(
-
-  );
-}
-
-
 class DayCircle extends StatelessWidget {
   final String day;
   final double circleSize;
@@ -196,6 +214,7 @@ class DayCircle extends StatelessWidget {
         child: Text(
           day,
           style: TextStyle(
+
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
             color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
@@ -204,4 +223,19 @@ class DayCircle extends StatelessWidget {
       ),
     );
   }
+}
+
+List<DayCircle> getDays(String daystring) {
+  List<DayCircle> days = [];
+  const String comparedays = "MTWTFSS";
+
+  for (int i = 0; i < 7; i++) {
+    Color dayColor = Colors.black;
+    if (daystring[i] == comparedays[i]) {
+      dayColor = Colors.white;
+    }
+    DayCircle dayCircle = DayCircle(day: daystring[i], color: dayColor);
+    days.add(dayCircle);
+  }
+  return days;
 }
