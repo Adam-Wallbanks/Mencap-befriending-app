@@ -89,8 +89,8 @@ class _IndexPageState extends State<IndexPage> {
   Card clientCard(Client client, int index) {
     bool isExpanded = expandedStates[index];
     double deviceWidth = MediaQuery.of(context).size.width;
-    double circleSize = deviceWidth > 600 ? 30.0 : 20.0;
-    double fontSize = deviceWidth > 600 ? 16.0 : 14.0;
+    double circleSize = deviceWidth > 600 ? 35.0 : 30.0;
+    double fontSize = deviceWidth > 600 ? 18.0 : 14.0;
     return Card(
       child: GestureDetector(
         onTap: () {
@@ -105,7 +105,7 @@ class _IndexPageState extends State<IndexPage> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -155,7 +155,7 @@ class _IndexPageState extends State<IndexPage> {
                       ),
                     ),
                     Row(
-                      children: getDays(client.days),
+                      children: getDays(client.days, circleSize, fontSize),
                     ),
                   ],
                 ),
@@ -184,6 +184,21 @@ class _IndexPageState extends State<IndexPage> {
       ),
     );
   }
+
+  List<DayCircle> getDays(String daystring, double circleSize, double fontSize) {
+    List<DayCircle> days = [];
+    const String comparedays = "MTWTFSS";
+
+    for (int i = 0; i < 7; i++) {
+      Color dayColor = Colors.black;
+      if (daystring[i] == comparedays[i]) {
+        dayColor = Colors.white;
+      }
+      DayCircle dayCircle = DayCircle(day: comparedays[i], color: dayColor, circleSize: circleSize , fontSize: fontSize,);
+      days.add(dayCircle);
+    }
+    return days;
+  }
 }
 
 class DayCircle extends StatelessWidget {
@@ -198,8 +213,6 @@ class DayCircle extends StatelessWidget {
     required this.fontSize,
     required this.color
   });
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -223,19 +236,4 @@ class DayCircle extends StatelessWidget {
       ),
     );
   }
-}
-
-List<DayCircle> getDays(String daystring) {
-  List<DayCircle> days = [];
-  const String comparedays = "MTWTFSS";
-
-  for (int i = 0; i < 7; i++) {
-    Color dayColor = Colors.black;
-    if (daystring[i] == comparedays[i]) {
-      dayColor = Colors.white;
-    }
-    DayCircle dayCircle = DayCircle(day: daystring[i], color: dayColor);
-    days.add(dayCircle);
-  }
-  return days;
 }
