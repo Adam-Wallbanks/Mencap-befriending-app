@@ -88,6 +88,9 @@ class _IndexPageState extends State<IndexPage> {
   
   Card clientCard(Client client, int index) {
     bool isExpanded = expandedStates[index];
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double circleSize = deviceWidth > 600 ? 30.0 : 20.0;
+    double fontSize = deviceWidth > 600 ? 16.0 : 14.0;
     return Card(
       child: GestureDetector(
         onTap: () {
@@ -112,9 +115,10 @@ class _IndexPageState extends State<IndexPage> {
                 Row(
                   children: <Widget>[
                     Container(
-                      height: 60,
-                      width: 60,
+                      height: circleSize,
+                      width: circleSize,
                       decoration: BoxDecoration(
+
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -140,10 +144,11 @@ class _IndexPageState extends State<IndexPage> {
                             Text(
                               "Age: " + client.age,
                               style: TextStyle(fontSize: 16),
+
                             ),
                             Text(
                               "Additional Information",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: fontSize),
                             ),
                           ],
                         ],
@@ -156,7 +161,21 @@ class _IndexPageState extends State<IndexPage> {
                 ),
                 if (isExpanded) ...[
                   SizedBox(height: 10),
-                  // Add additional expanded content here
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.thumb_up, color: Colors.white),
+                        onPressed: () {
+                          // Perform thumbs up action here
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -169,14 +188,24 @@ class _IndexPageState extends State<IndexPage> {
 
 class DayCircle extends StatelessWidget {
   final String day;
+  final double circleSize;
+  final double fontSize;
   final Color color;
-  const DayCircle({required this.day, this.color = Colors.white});
+
+  const DayCircle({
+    required this.day,
+    required this.circleSize,
+    required this.fontSize,
+    required this.color
+  });
+
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 30,
-      height: 30,
+      width: circleSize,
+      height: circleSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
@@ -185,11 +214,11 @@ class DayCircle extends StatelessWidget {
         child: Text(
           day,
           style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: (color.computeLuminance() > 0.179)
-                  ? Colors.black
-                  : Colors.white),
+
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
+          ),
         ),
       ),
     );
