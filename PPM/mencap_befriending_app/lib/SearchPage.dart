@@ -12,7 +12,6 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   SupabaseManager supabase = SupabaseManager();
   List<bool> expandedStates = List.filled(17, false);
-
   late Future<List<Client>> clientsFuture;
 
   @override
@@ -74,6 +73,17 @@ class _IndexPageState extends State<IndexPage> {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => FilterOptionsBottomSheet(),
+          );
+        },
+        child: Icon(Icons.filter_list),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -85,7 +95,7 @@ class _IndexPageState extends State<IndexPage> {
       },
     );
   }
-  
+
   Card clientCard(Client client, int index) {
     bool isExpanded = expandedStates[index];
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -118,7 +128,6 @@ class _IndexPageState extends State<IndexPage> {
                       height: circleSize,
                       width: circleSize,
                       decoration: BoxDecoration(
-
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -144,7 +153,6 @@ class _IndexPageState extends State<IndexPage> {
                             Text(
                               "Age: " + client.age,
                               style: TextStyle(fontSize: 16),
-
                             ),
                             Text(
                               "Additional Information",
@@ -196,7 +204,13 @@ class _IndexPageState extends State<IndexPage> {
         dayColor = Colors.white;
         fontColor = Colors.black;
       }
-      DayCircle dayCircle = DayCircle(day: comparedays[i], circleColor: dayColor, circleSize: circleSize , fontSize: fontSize, fontColor: fontColor);
+      DayCircle dayCircle = DayCircle(
+        day: comparedays[i],
+        circleColor: dayColor,
+        circleSize: circleSize,
+        fontSize: fontSize,
+        fontColor: fontColor,
+      );
       days.add(dayCircle);
     }
     return days;
@@ -210,14 +224,12 @@ class DayCircle extends StatelessWidget {
   final double fontSize;
   final Color fontColor;
 
-
   const DayCircle({
     required this.day,
     required this.circleSize,
     required this.fontSize,
     required this.circleColor,
-    required this.fontColor
-
+    required this.fontColor,
   });
 
   @override
@@ -233,11 +245,63 @@ class DayCircle extends StatelessWidget {
         child: Text(
           day,
           style: TextStyle(
-
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            color: fontColor
+            color: fontColor,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class FilterOptionsBottomSheet extends StatefulWidget {
+  @override
+  _FilterOptionsBottomSheetState createState() =>
+      _FilterOptionsBottomSheetState();
+}
+
+class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
+  String searchQuery = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Filter Options',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text('Search:'),
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Enter search query',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                // Apply filters and update the client list
+                // based on the searchQuery and other filter options
+                Navigator.pop(context);
+              },
+              child: Text('Apply Filters'),
+            ),
+          ],
         ),
       ),
     );
