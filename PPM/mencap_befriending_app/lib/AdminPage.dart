@@ -10,7 +10,7 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  SupabaseManager supabase = new SupabaseManager();
+  SupabaseManager supabase = SupabaseManager();
   List<DataRow> dataRows = [];
 
 
