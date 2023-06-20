@@ -9,92 +9,121 @@ class MobileLoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   SupabaseManager supabase = SupabaseManager();
 
+  double maxWidth;
+  double maxHeight;
+
+
+  MobileLoginPage({required this.maxWidth, required this.maxHeight});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
         flexibleSpace: Align(
-          alignment: Alignment.center,
-          child: Image.asset(
-            'assets/nottingham_mencap_logo.png',
-            width: 150,
-            height: 150,
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Image.asset(
+              'assets/nottingham_mencap_logo.png',
+              width: 100,
+              height: 100,
+              alignment: Alignment.bottomCenter,
+            ),
           ),
         ),
       ),
       body: Container(
         decoration: pageDecoration,
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(45),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              TextField(
-                controller: userController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
+              Container(
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(175, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(50, 75, 50, 75),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: userController,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      TextField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                        ),
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          // Perform login functionality here
+                          String username = userController.text;
+                          String password = passwordController.text;
+                          Encrypter encrypter = new Encrypter();
+
+                          username = encrypter.encryptBase64(username);
+                          password = encrypter.hashPassword(password);
+
+                          bool valid =
+                              await supabase.ValidateUser(username, password);
+
+                          String dialogMessage = "";
+
+                          if (valid) //If there is a valid account match
+                          {
+                            dialogMessage = "Login Valid";
+                            valid = true;
+                          } else {
+                            dialogMessage = "Login Invalid";
+                          }
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext builder) => AlertDialog(
+                                    title: const Text("Log In"),
+                                    content: Text(dialogMessage),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: const Text('OK',
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      ),
+                                    ],
+                                  )).then((value) async {
+                            if (valid) {
+                              List<String> userdetails =
+                                  await supabase.SelectUser(username, password);
+                              String userid = userdetails[0];
+                              print(userid);
+                              Navigator.pushNamed(context, "/SearchPage",
+                                  arguments: {
+                                    'userid': userid,
+                                  });
+                            }
+                          });
+                        },
+                        child: const Text('Log In'),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  // Perform login functionality here
-                  String username = userController.text;
-                  String password = passwordController.text;
-                  Encrypter encrypter = new Encrypter();
-
-                  username = encrypter.encryptBase64(username);
-                  password = encrypter.hashPassword(password);
-
-                  bool valid = await supabase.ValidateUser(username, password);
-
-                  String dialogMessage = "";
-
-                  if (valid) //If there is a valid account match
-                  {
-                    dialogMessage = "Login Valid";
-                    valid = true;
-                  } else {
-                    dialogMessage = "Login Invalid";
-                  }
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext builder) => AlertDialog(
-                            title: const Text("Log In"),
-                            content: Text(dialogMessage),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK',
-                                    style: TextStyle(color: Colors.black)),
-                              ),
-                            ],
-                          )).then((value) async {
-                    if (valid) {
-                      List<String> userdetails =
-                          await supabase.SelectUser(username, password);
-                      String userid = userdetails[0];
-                      print(userid);
-                      Navigator.pushNamed(context, "/SearchPage", arguments: {
-                        'userid': userid,
-                      });
-                    }
-                  });
-                },
-                child: const Text('Log In'),
               ),
               const Spacer(),
               Container(
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(175, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(15)),
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -122,100 +151,139 @@ class DesktopLoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   SupabaseManager supabase = SupabaseManager();
 
+  double maxWidth;
+  double maxHeight;
+
+  DesktopLoginPage({required this.maxWidth, required this.maxHeight});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-          flexibleSpace: Align(
-            alignment: Alignment.center,
+      appBar: AppBar(
+        title: const Text('Login'),
+        flexibleSpace: Align(
+          alignment: Alignment.bottomCenter,
             child: Image.asset(
               'assets/nottingham_mencap_logo.png',
-              width: 150,
-              height: 150,
+              width: 200,
+              height: 200,
+              alignment: Alignment.bottomCenter,
             ),
           ),
-        ),
-        body: Container(
-            decoration: pageDecoration,
-            child: Row(children: [
-              Spacer(
-                flex: 1,
-              ),
+      ),
+      body: Container(
+        decoration: pageDecoration,
+          child: Row(
+            children: [
+              Spacer(flex: LoginWidthFlex(maxWidth)[1]),
               Flexible(
-                flex: 3,
+                flex: LoginWidthFlex(maxWidth)[0],
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Spacer(),
-                    TextField(
-                      controller: userController,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    TextField(
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                      ),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () async {
-                        // Perform login functionality here
-                        String username = userController.text;
-                        String password = passwordController.text;
-                        Encrypter encrypter = new Encrypter();
+                    Spacer( flex: 3,),
+                    Flexible(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(175, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(20)),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: [
+                            Spacer(flex: 1,),
+                            Flexible(
+                              flex: 5,
+                              child: Column(
+                                children: [
+                                  const Spacer(flex: 1),
+                                  Flexible(
+                                    flex: 2,
+                                    child: Column(
+                                      children: [
+                                        TextField(
+                                          controller: userController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Username',
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        TextField(
+                                          controller: passwordController,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Password',
+                                          ),
+                                          obscureText: true,
+                                        ),
+                                        const SizedBox(height: 16.0),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            // Perform login functionality here
+                                            String username = userController.text;
+                                            String password = passwordController.text;
+                                            Encrypter encrypter = new Encrypter();
 
-                        username = encrypter.encryptBase64(username);
-                        password = encrypter.hashPassword(password);
+                                            username = encrypter.encryptBase64(username);
+                                            password = encrypter.hashPassword(password);
 
-                        bool valid =
-                            await supabase.ValidateUser(username, password);
+                                            bool valid =
+                                            await supabase.ValidateUser(username, password);
 
-                        String dialogMessage = "";
+                                            String dialogMessage = "";
 
-                        if (valid) //If there is a valid account match
-                        {
-                          dialogMessage = "Login Valid";
-                          valid = true;
-                        } else {
-                          dialogMessage = "Login Invalid";
-                        }
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext builder) => AlertDialog(
-                                  title: const Text("Log In"),
-                                  content: Text(dialogMessage),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
-                                      child: const Text('OK',
-                                          style:
-                                              TextStyle(color: Colors.black)),
+                                            if (valid) //If there is a valid account match
+                                                {
+                                              dialogMessage = "Login Valid";
+                                              valid = true;
+                                            } else {
+                                              dialogMessage = "Login Invalid";
+                                            }
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext builder) => AlertDialog(
+                                                  title: const Text("Log In"),
+                                                  content: Text(dialogMessage),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context, 'OK'),
+                                                      child: const Text('OK',
+                                                          style:
+                                                          TextStyle(color: Colors.black)),
+                                                    ),
+                                                  ],
+                                                )).then((value) async {
+                                              if (valid) {
+                                                List<String> userdetails =
+                                                await supabase.SelectUser(username, password);
+                                                String userid = userdetails[0];
+                                                print(userid);
+                                                Navigator.pushNamed(context, "/SearchPage",
+                                                    arguments: {
+                                                      'userid': userid,
+                                                    });
+                                              }
+                                            });
+                                          },
+                                          child: const Text('Log In'),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                )).then((value) async {
-                          if (valid) {
-                            List<String> userdetails =
-                                await supabase.SelectUser(username, password);
-                            String userid = userdetails[0];
-                            print(userid);
-                            Navigator.pushNamed(context, "/SearchPage",
-                                arguments: {
-                                  'userid': userid,
-                                });
-                          }
-                        });
-                      },
-                      child: const Text('Log In'),
+                                  ),
+                                  const Spacer(flex: 1),
+                                ],
+                              ),
+                            ),
+                            Spacer(flex: 1,)
+                          ],
+                        ),
+                      ),
                     ),
-                    const Spacer(),
+                    const Spacer(flex: 1,),
                     Container(
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(175, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(15)),
                       alignment: Alignment.center,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -230,13 +298,15 @@ class DesktopLoginPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const Spacer(flex: 3,)
                   ],
                 ),
               ),
-              Spacer(
-                flex: 1,
-              )
-            ])));
+              Spacer(flex: LoginWidthFlex(maxWidth)[1],)
+            ],
+          ),
+        ),
+    );
   }
 }
 
@@ -246,10 +316,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < MobileWidth) {
-        return MobileLoginPage();
+      if (constraints.maxWidth < MobileWidth || constraints.maxHeight < MobileHeight)  {
+        return MobileLoginPage(maxWidth: constraints.maxWidth, maxHeight: constraints.maxHeight,);
       } else {
-        return DesktopLoginPage();
+        return DesktopLoginPage(maxWidth: constraints.maxWidth, maxHeight: constraints.maxHeight,);
       }
     });
   }

@@ -190,11 +190,13 @@ class _IndexPageState extends State<IndexPage> {
     const String comparedays = "MTWTFSS";
 
     for (int i = 0; i < 7; i++) {
-      Color dayColor = Colors.black;
+      Color fontColor = Color.fromARGB(100, 0, 0, 0);
+      Color dayColor = Color.fromARGB(175, 200, 200, 200);
       if (daystring[i] == comparedays[i]) {
         dayColor = Colors.white;
+        fontColor = Colors.black;
       }
-      DayCircle dayCircle = DayCircle(day: comparedays[i], color: dayColor, circleSize: circleSize , fontSize: fontSize,);
+      DayCircle dayCircle = DayCircle(day: comparedays[i], circleColor: dayColor, circleSize: circleSize , fontSize: fontSize, fontColor: fontColor);
       days.add(dayCircle);
     }
     return days;
@@ -204,14 +206,18 @@ class _IndexPageState extends State<IndexPage> {
 class DayCircle extends StatelessWidget {
   final String day;
   final double circleSize;
+  final Color circleColor;
   final double fontSize;
-  final Color color;
+  final Color fontColor;
+
 
   const DayCircle({
     required this.day,
     required this.circleSize,
     required this.fontSize,
-    required this.color
+    required this.circleColor,
+    required this.fontColor
+
   });
 
   @override
@@ -221,7 +227,7 @@ class DayCircle extends StatelessWidget {
       height: circleSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color,
+        color: circleColor,
       ),
       child: Center(
         child: Text(
@@ -230,7 +236,7 @@ class DayCircle extends StatelessWidget {
 
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            color: (color.computeLuminance() > 0.179)? Colors.black : Colors.white
+            color: fontColor
           ),
         ),
       ),
