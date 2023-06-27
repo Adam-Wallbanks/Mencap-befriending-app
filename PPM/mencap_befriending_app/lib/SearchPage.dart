@@ -78,7 +78,9 @@ class _IndexPageState extends State<IndexPage> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => FilterOptionsBottomSheet(),
+            builder: (context) => FilterOptionsBottomSheet(
+              applyFilters: applyFilters,
+            ),
           );
         },
         child: Icon(Icons.filter_list),
@@ -215,6 +217,16 @@ class _IndexPageState extends State<IndexPage> {
     }
     return days;
   }
+
+  void applyFilters(String searchQuery, List<bool> selectedDays, String ageRange) {
+    // Apply the filters and update the client list based on the filter options
+    // You can use the searchQuery, selectedDays, and ageRange variables to filter the data
+    // For simplicity, I'll print the values here
+
+    print('Search Query: $searchQuery');
+    print('Selected Days: $selectedDays');
+    print('Age Range: $ageRange');
+  }
 }
 
 class DayCircle extends StatelessWidget {
@@ -256,6 +268,10 @@ class DayCircle extends StatelessWidget {
 }
 
 class FilterOptionsBottomSheet extends StatefulWidget {
+  final Function(String, List<bool>, String) applyFilters;
+
+  const FilterOptionsBottomSheet({required this.applyFilters});
+
   @override
   _FilterOptionsBottomSheetState createState() =>
       _FilterOptionsBottomSheetState();
@@ -263,6 +279,8 @@ class FilterOptionsBottomSheet extends StatefulWidget {
 
 class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
   String searchQuery = '';
+  List<bool> selectedDays = List.filled(7, false);
+  String ageRange = '';
 
   @override
   Widget build(BuildContext context) {
@@ -293,10 +311,112 @@ class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
               ),
             ),
             SizedBox(height: 16.0),
+            Text('Days Available:'),
+            Row(
+              children: [
+                Checkbox(
+                  value: selectedDays[0],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[0] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Mon'),
+                Checkbox(
+                  value: selectedDays[1],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[1] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Tue'),
+                Checkbox(
+                  value: selectedDays[2],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[2] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Wed'),
+                Checkbox(
+                  value: selectedDays[3],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[3] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Thu'),
+                Checkbox(
+                  value: selectedDays[4],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[4] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Fri'),
+                Checkbox(
+                  value: selectedDays[5],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[5] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Sat'),
+                Checkbox(
+                  value: selectedDays[6],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDays[6] = value ?? false;
+                    });
+                  },
+                ),
+                Text('Sun'),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Text('Age Range:'),
+            DropdownButton<String>(
+              value: ageRange ?? '', // Add a default value here
+              onChanged: (value) {
+                setState(() {
+                  ageRange = value ?? '';
+                });
+              },
+              items: [
+                DropdownMenuItem(
+                  value: '', // Add a default value here
+                  child: Text('Select Age Range'),
+                ),
+                DropdownMenuItem(
+                  value: '0-18',
+                  child: Text('0-18'),
+                ),
+                DropdownMenuItem(
+                  value: '19-30',
+                  child: Text('19-30'),
+                ),
+                DropdownMenuItem(
+                  value: '31-50',
+                  child: Text('31-50'),
+                ),
+                DropdownMenuItem(
+                  value: '51+',
+                  child: Text('51+'),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Apply filters and update the client list
-                // based on the searchQuery and other filter options
+                // Pass the selected filter options back to the parent widget
+                widget.applyFilters(searchQuery, selectedDays, ageRange);
+
                 Navigator.pop(context);
               },
               child: Text('Apply Filters'),
