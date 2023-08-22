@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'Encrypter.dart';
 import 'decorations.dart';
 import 'dimensions.dart';
+import 'data.dart' as data;
 
 class MobileLoginPage extends StatelessWidget {
   final TextEditingController userController = TextEditingController();
@@ -102,14 +103,25 @@ class MobileLoginPage extends StatelessWidget {
                                     ],
                                   )).then((value) async {
                             if (valid) {
-                              List<String> userdetails =
+                              data.User userdetails =
                                   await supabase.SelectUser(username, password);
-                              String userid = userdetails[0];
+                              String userid = userdetails.id;
+                              bool isadmin = userdetails.admin;
                               print(userid);
-                              Navigator.pushNamed(context, "/SearchPage",
-                                  arguments: {
-                                    'userid': userid,
-                                  });
+                              print("Isadmin?");
+                              print(isadmin.toString());
+                              if (!isadmin) {
+                                Navigator.pushNamed(context, "/SearchPage",
+                                    arguments: {
+                                      'userid': userid,
+                                    });
+                              }
+                              else{
+                                Navigator.pushNamed(context, "/AdminMenu",
+                                    arguments: {
+                                      'userid': userid,
+                                    });
+                              }
                             }
                           });
                         },
@@ -254,10 +266,13 @@ class DesktopLoginPage extends StatelessWidget {
                                                   ],
                                                 )).then((value) async {
                                               if (valid) {
-                                                List<String> userdetails =
+                                                data.User userdetails =
                                                 await supabase.SelectUser(username, password);
-                                                String userid = userdetails[0];
+                                                String userid = userdetails.id;
+                                                bool isadmin = userdetails.admin;
                                                 print(userid);
+                                                print("Isadmin?");
+                                                print(isadmin);
                                                 Navigator.pushNamed(context, "/SearchPage",
                                                     arguments: {
                                                       'userid': userid,

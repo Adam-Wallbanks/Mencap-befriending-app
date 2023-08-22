@@ -1,154 +1,245 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mencap_befriending_app/supabasemanager.dart';
+import 'data.dart';
+import 'supabasemanager.dart';
+import 'package:supabase/supabase.dart';
+import 'dart:async';
 
-class AdminPage extends StatefulWidget {
-  const AdminPage({ Key? key }) : super(key: key);
-
+class AdminMenuPage extends StatefulWidget {
   @override
-  _AdminPageState createState() => _AdminPageState();
+  _AdminMenuPageState createState() => _AdminMenuPageState();
 }
 
-class _AdminPageState extends State<AdminPage> {
-  SupabaseManager supabase = SupabaseManager();
-  List<DataRow> dataRows = [];
-
-
-  @override
-  void initState() {
-    // ClientsToRows(supabase.GetClients()).then((value) {
-    //   setState(() {
-    //     dataRows = value;
-    //   });
-    // });
-  }
-
-  void updateDataRows(List<DataRow> newDataRows) {
-    setState(() {
-      dataRows = newDataRows;
-    });
-  }
-
+class _AdminMenuPageState extends State<AdminMenuPage> {
   @override
   Widget build(BuildContext context) {
+
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    String userid = arg['userid'];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Clients"),
+        title: const Text("Admin"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, '/Settings',
+              arguments: {'userid': userid});
+            },
+          ),
+        ],
       ),
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
             colors: [Colors.blue, Colors.green],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: FittedBox(
-          child: DataTable(
-            columns: const [
-              DataColumn(label: Text("ID")),
-              DataColumn(label: Text("PostCode")),
-              DataColumn(label: Text("Days Free")),
-              DataColumn(label: Text("Likes/Dislikes")),
-              DataColumn(label: Text(""))
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: Container(
+                  width: 140,
+                  child: FloatingActionButton(
+                    heroTag: 'clients',
+                    onPressed: () {
+                      // Handle button press for "Clients"
+                    },
+                    child: Text('Clients'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: 140,
+                  child: FloatingActionButton(
+                    heroTag: 'userManagement',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/UserManagementPage',
+                          arguments: {'userid': userid});
+                    },
+                    child: Text('User Management'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: 140,
+                  child: FloatingActionButton(
+                    heroTag: 'searchPage',
+                    onPressed: () {
+                      // Handle button press for "Requests"
+                    },
+                    child: Text('Continue As User'),
+                  ),
+                ),
+              ),
             ],
-            rows: dataRows,
-            dataRowHeight: getRowHeight(),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // showFilterMenu(context);
-        },
       ),
     );
   }
-
-  // void showFilterMenu(BuildContext context) {
-  //   List<String> days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  //   List<String> selected = [];
-
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(
-  //         builder: (BuildContext context, StateSetter setState) {
-  //           return Container(
-  //             height: MediaQuery.of(context).size.height * 0.6,
-  //             child: Column(
-  //               children: [
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         Navigator.pop(context);
-  //                       },
-  //                       child: Text('Cancel'),
-  //                     ),
-  //                     ElevatedButton(
-  //                       onPressed: () async {
-  //                         final filteredData = await supabase.ClientsToRows(supabase.OnDays(selected, supabase.LikePostcode(filterController.text,supabase.GetClients())));
-  //                         updateDataRows(filteredData);
-  //                         Navigator.pop(context);
-  //                       },
-  //                       child: Text('Apply filters'),
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 Expanded(
-  //                   child: TextField(
-  //                     controller: filterController,
-  //                     decoration: InputDecoration(
-  //                       labelText: 'Enter First Part of Postcode Here (e.g. NG1)',
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 Expanded(
-  //                   child: ListView.builder(
-  //                     itemCount: days.length,
-  //                     itemBuilder: (BuildContext context, int index) {
-  //                       final filter = days[index];
-  //                       return CheckboxListTile(
-  //                         title: Text(filter),
-  //                         value: selected.contains(filter),
-  //                         onChanged: (value) {
-  //                           setState(() {
-  //                             if (value == true) {
-  //                               selected.add(filter);
-  //                             } else {
-  //                               selected.remove(filter);
-  //                             }
-  //                           });
-  //                         },
-  //                       );
-  //                     },
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
+}
 
 
-  double getRowHeight()
-  {
-    double rowHeight;
-    bool platform  = kIsWeb;
-    if(!platform)
-    {
-      rowHeight = 50;
-    }
-    else{
-      rowHeight = 35;
-    }
+class UserManagementPage extends StatefulWidget {
+  @override
+  _UserManagementPageState createState() => _UserManagementPageState();
+}
 
-    return rowHeight;
+class _UserManagementPageState extends State<UserManagementPage> {
+  List<bool> expandedStates = List.filled(17, false);
+
+  @override
+  Widget build(BuildContext context) {
+
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    String userid = arg['userid'];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Users"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            tooltip: "Add",
+            onPressed: () {
+              //Add new User
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.settings),
+            tooltip: "Settings",
+            onPressed: () {
+              Navigator.pushNamed(context, '/Settings',
+                  arguments: {'userid': userid});
+            },
+          ),
+        ],
+      ),
+      body: getBody(),
+    );
+  }
+
+  Widget getBody() {
+    List<String> items = ["Dave Jones", "Adam Sheep", "Tom Christ", "Luke Robot", "Lana", "Siena", "Beth", "Bryan", "3", "a", "b", "c", "d", "e", "f", "g", "h"];
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return getCard(items[index], index);
+      },
+    );
+  }
+
+  Widget getCard(String item, int index) {
+    bool isExpanded = expandedStates[index];
+    return Card(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            expandedStates[index] = !isExpanded;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.green],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: <Widget>[
+                    Container(
+                      height: 60,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(item),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Text(
+                          //  "Dave Jones",
+                          // style: TextStyle(fontSize: 16),
+                          //),
+                          if (isExpanded) ...[
+                            Text(
+                              "Username: XX",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "Email: XX",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "Password: XX",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              "Information: XX",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button 1 functionality
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 5),
+                          Text("Edit"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button 1 functionality
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete),
+                          SizedBox(width: 5),
+                          Text("Delete"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if (isExpanded) ...[
+                  SizedBox(height: 10),
+                  // Add additional expanded content here
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

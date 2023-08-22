@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:supabase/supabase.dart';
+import 'data.dart' as data;
 
 const supabaseURL = 'https://bbchavdidouzbotpgxzi.supabase.co';
 const supabaseKey =
@@ -24,7 +25,7 @@ class SupabaseManager {
     return query;
   }
 
-  Future<List<String>> SelectUser(String username, String password)
+  Future<List<String>> SelectUserStrings(String username, String password)
   async {
     List<String> list = ["","",""];
     var query = client.from('Users').select('userid,username,password').eq('username', username).eq('password', password);
@@ -39,6 +40,25 @@ class SupabaseManager {
       }
       print(list.toString());
     return list;
+  }
+
+  Future<data.User> SelectUser(String username, String password)
+  async {
+    data.User UserObject = data.User();
+    var query = client.from('Users').select('*').eq('username', username).eq('password', password);
+    var results = await query;
+    print(results.toString());
+    if(results.toString() != "[]")
+    {
+      UserObject.id = (results[0]['userid'].toString());
+      UserObject.username = (results[0]['username'].toString());
+      UserObject.password = (results[0]['password'].toString());
+      UserObject.first = (results[0]['first_name'].toString());
+      UserObject.last = (results[0]['last_name'].toString());
+      UserObject.email = (results[0]['email'].toString());
+      UserObject.admin = results[0]['isadmin'];
+    }
+    return UserObject;
   }
 
   UpdateQuery(String table, String field, String oldvalue, String newvalue) {

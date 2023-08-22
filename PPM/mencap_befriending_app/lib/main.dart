@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'SearchPage.dart';
 import 'LoginPages.dart';
 import 'SettingsPages.dart';
+import 'AdminPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,6 +54,8 @@ class _MyAppState extends State<MyApp> {
         '/ChangeUsername': (context) => ChangeUsernameSettings(),
         '/ChangePassword': (context) => ChangePasswordSettings(),
         '/SearchPage': (context) => IndexPage(),
+        '/AdminMenu': (context) => AdminMenuPage(),
+        '/UserManagementPage': (context) => UserManagementPage(),
       },
     );
   }
