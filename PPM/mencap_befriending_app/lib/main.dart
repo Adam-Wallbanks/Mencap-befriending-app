@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
         '/SearchPage': (context) => IndexPage(),
         '/AdminMenu': (context) => AdminMenuPage(),
         '/UserManagementPage': (context) => UserManagementPage(),
+        '/clientManager': (context) => TableView(),
       },
     );
   }

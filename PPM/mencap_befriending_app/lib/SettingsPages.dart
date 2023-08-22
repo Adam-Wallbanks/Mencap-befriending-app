@@ -89,26 +89,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: onToggleTheme,
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 24.0,
-                        ),
-                      ),
-                      icon: Icon(Icons.lightbulb_circle_sharp),
-                      label: const Text(
-                        "Toggle Light/Dark mode",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/login');

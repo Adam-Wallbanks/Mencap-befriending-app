@@ -12,7 +12,6 @@ class AdminMenuPage extends StatefulWidget {
 class _AdminMenuPageState extends State<AdminMenuPage> {
   @override
   Widget build(BuildContext context) {
-
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     String userid = arg['userid'];
 
@@ -24,7 +23,7 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
             icon: Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(context, '/Settings',
-              arguments: {'userid': userid});
+                  arguments: {'userid': userid});
             },
           ),
         ],
@@ -41,41 +40,55 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: Container(
-                  width: 140,
-                  child: FloatingActionButton(
-                    heroTag: 'clients',
-                    onPressed: () {
-                      // Handle button press for "Clients"
-                    },
-                    child: Text('Clients'),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle button press for "Clients
+                  Navigator.pushNamed(context, '/clientManager',
+                    arguments: {'userid': userid});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  minimumSize: Size(200, 100), // Fixed dimensions
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Clients'),
                 ),
               ),
-              Expanded(
-                child: Container(
-                  width: 140,
-                  child: FloatingActionButton(
-                    heroTag: 'userManagement',
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/UserManagementPage',
-                          arguments: {'userid': userid});
-                    },
-                    child: Text('User Management'),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/UserManagementPage',
+                      arguments: {'userid': userid});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  minimumSize: Size(200, 100), // Fixed dimensions
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('User Management'),
                 ),
               ),
-              Expanded(
-                child: Container(
-                  width: 140,
-                  child: FloatingActionButton(
-                    heroTag: 'searchPage',
-                    onPressed: () {
-                      // Handle button press for "Requests"
-                    },
-                    child: Text('Continue As User'),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle button press for "Requests"
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  minimumSize: Size(200, 100), // Fixed dimensions
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Continue As User'),
                 ),
               ),
             ],
@@ -85,7 +98,6 @@ class _AdminMenuPageState extends State<AdminMenuPage> {
     );
   }
 }
-
 
 class UserManagementPage extends StatefulWidget {
   @override
@@ -97,7 +109,6 @@ class _UserManagementPageState extends State<UserManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     String userid = arg['userid'];
 
@@ -178,10 +189,6 @@ class _UserManagementPageState extends State<UserManagementPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //Text(
-                          //  "Dave Jones",
-                          // style: TextStyle(fontSize: 16),
-                          //),
                           if (isExpanded) ...[
                             Text(
                               "Username: XX",
@@ -219,7 +226,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
                     SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
-                        // Add button 1 functionality
+                        // Add button 2 functionality
                       },
                       child: Row(
                         children: [
@@ -236,6 +243,73 @@ class _UserManagementPageState extends State<UserManagementPage> {
                   // Add additional expanded content here
                 ],
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TableView extends StatefulWidget {
+  @override
+  _TableViewState createState() => _TableViewState();
+}
+
+class _TableViewState extends State<TableView> {
+  List<Map<String, dynamic>> clientData = [
+    {
+      'clientId': '1',
+      'days': 'Monday',
+      'town': 'town',
+      'postcode': '12345',
+      'hours': '40',
+      'age': '28',
+      'notes': 'Sample notes for client 1',
+    },
+    {
+      'clientId': '2',
+      'days': 'Thursday',
+      'town': 'town',
+      'postcode': '67890',
+      'hours': '35',
+      'age': '34',
+      'notes': 'Sample notes for client 2',
+    },
+    // Add more client data as needed
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('Clients')),
+        body: SingleChildScrollView(
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columns: [
+                  DataColumn(label: Text('Client ID')),
+                  DataColumn(label: Text('Days')),
+                  DataColumn(label: Text('Town')),
+                  DataColumn(label: Text('Postcode')),
+                  DataColumn(label: Text('Hours')),
+                  DataColumn(label: Text('Age')),
+                  DataColumn(label: Text('Notes')),
+                ],
+                rows: clientData.map((client) {
+                  return DataRow(cells: [
+                    DataCell(Text(client['clientId'])),
+                    DataCell(Text(client['days'])),
+                    DataCell(Text(client['town'])),
+                    DataCell(Text(client['postcode'])),
+                    DataCell(Text(client['hours'])),
+                    DataCell(Text(client['age'])),
+                    DataCell(Text(client['notes'])),
+                  ]);
+                }).toList(),
+              ),
             ),
           ),
         ),
