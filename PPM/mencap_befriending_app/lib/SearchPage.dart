@@ -8,7 +8,6 @@ class IndexPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
 }
-
 class _IndexPageState extends State<IndexPage> {
   SupabaseManager supabase = SupabaseManager();
   List<bool> expandedStates = List.filled(17, false);
@@ -48,6 +47,8 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    String userid = arg['userid'];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Clients"),
@@ -55,7 +56,8 @@ class _IndexPageState extends State<IndexPage> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/Settings',
+              arguments: {'userid': userid});
             },
           ),
         ],
