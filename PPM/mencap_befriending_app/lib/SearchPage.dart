@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mencap_befriending_app/decorations.dart';
 import 'data.dart';
 import 'supabasemanager.dart';
 import 'package:supabase/supabase.dart';
@@ -8,6 +9,7 @@ class IndexPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
 }
+
 class _IndexPageState extends State<IndexPage> {
   SupabaseManager supabase = SupabaseManager();
   List<bool> expandedStates = List.filled(17, false);
@@ -57,7 +59,7 @@ class _IndexPageState extends State<IndexPage> {
             icon: Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(context, '/Settings',
-              arguments: {'userid': userid});
+                  arguments: {'userid': userid});
             },
           ),
         ],
@@ -85,7 +87,17 @@ class _IndexPageState extends State<IndexPage> {
             ),
           );
         },
-        child: Icon(Icons.filter_list),
+        child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.blue, Colors.green],
+                )),
+            child: Icon(Icons.filter_list)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -121,75 +133,86 @@ class _IndexPageState extends State<IndexPage> {
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: circleSize,
-                      width: circleSize,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: circleSize,
+                        width: circleSize,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(client.id),
+                        ),
                       ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(client.id),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Postcode: " + client.postcode,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            "Hours Available: " + client.hours,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          if (isExpanded) ...[
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              "Age: " + client.age,
+                              "Postcode: " + client.postcode,
                               style: TextStyle(fontSize: 16),
                             ),
                             Text(
-                              "Additional Information",
-                              style: TextStyle(fontSize: fontSize),
+                              "Hours: " + client.hours,
+                              style: TextStyle(fontSize: 16),
                             ),
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                    Row(
-                      children: getDays(client.days, circleSize, fontSize),
+                      Row(
+                        children: getDays(client.days, circleSize, fontSize),
+                      ),
+                    ],
+                  ),
+                  if (isExpanded) ...[
+                    Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Age: " + client.age,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Additional Information: " + client.notes,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.thumb_up, color: Colors.white),
+                              onPressed: () {
+                                // Perform thumbs up action here
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                if (isExpanded) ...[
-                  SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.thumb_up, color: Colors.white),
-                        onPressed: () {
-                          // Perform thumbs up action here
-                        },
-                      ),
-                    ),
-                  ),
                 ],
-              ],
+              ),
+
             ),
           ),
         ),
@@ -197,7 +220,8 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 
-  List<DayCircle> getDays(String daystring, double circleSize, double fontSize) {
+  List<DayCircle> getDays(
+      String daystring, double circleSize, double fontSize) {
     List<DayCircle> days = [];
     const String comparedays = "MTWTFSS";
 
@@ -220,7 +244,8 @@ class _IndexPageState extends State<IndexPage> {
     return days;
   }
 
-  void applyFilters(String searchQuery, List<bool> selectedDays, String ageRange) {
+  void applyFilters(
+      String searchQuery, List<bool> selectedDays, String ageRange) {
     // Apply the filters and update the client list based on the filter options
     // You can use the searchQuery, selectedDays, and ageRange variables to filter the data
     // For simplicity, I'll print the values here
@@ -280,7 +305,8 @@ class FilterOptionsBottomSheet extends StatefulWidget {
 }
 
 class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
-  String searchQuery = '';
+  String postCode = '';
+  String id = '';
   List<bool> selectedDays = List.filled(7, false);
   String ageRange = '';
 
@@ -300,21 +326,34 @@ class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
               ),
             ),
             SizedBox(height: 16.0),
-            Text('Search:'),
+            Text('Search by id:'),
             TextField(
               onChanged: (value) {
                 setState(() {
-                  searchQuery = value;
+                  id = value;
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Enter search query',
+                hintText: 'Enter Postcode',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text('Search by postcode:'),
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  postCode = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Enter Postcode',
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 16.0),
             Text('Days Available:'),
-            Row(
+            Wrap(
               children: [
                 Checkbox(
                   value: selectedDays[0],
@@ -414,14 +453,27 @@ class _FilterOptionsBottomSheetState extends State<FilterOptionsBottomSheet> {
               ],
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // Pass the selected filter options back to the parent widget
-                widget.applyFilters(searchQuery, selectedDays, ageRange);
+            Container(
+              width: 140,
+              height: 50,
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  gradient: LinearGradient(
+                    colors: [Colors.blue, Colors.green],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent),
+                onPressed: () {
+                  // Pass the selected filter options back to the parent widget
+                  widget.applyFilters(postCode, selectedDays, ageRange);
 
-                Navigator.pop(context);
-              },
-              child: Text('Apply Filters'),
+                  Navigator.pop(context);
+                },
+                child: Text('Apply Filters'),
+              ),
             ),
           ],
         ),
