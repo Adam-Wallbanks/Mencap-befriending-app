@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:supabase/supabase.dart';
 import 'data.dart' as data;
 
-const supabaseURL = 'https://bbchavdidouzbotpgxzi.supabase.co';
+const supabaseURL = 'https://bbchavdidouzbotpgxzi.supabase.co/';
 const supabaseKey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiY2hhdmRpZG91emJvdHBneHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzc3MDcyNDYsImV4cCI6MTk5MzI4MzI0Nn0.ilEmtJmQX1oOwQj7sYQUbT8jSf-sGzs5lrx4hgTUm-w';
 
